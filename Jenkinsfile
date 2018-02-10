@@ -40,7 +40,8 @@ timeout(time: 5, unit: 'MINUTES') {
    } }
     catch(err) {
     // timeout reached or input false
-     def user = err.getCauses()[0].getUser() if('SYSTEM' == user.toString()) {
+     def user = err.getCauses()[0].getUser()
+     if('SYSTEM' == user.toString()) {
       // SYSTEM means timeout.
       didTimeout = true
       }
