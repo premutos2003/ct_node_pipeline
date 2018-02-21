@@ -14,15 +14,9 @@ node {
         sh '''
     cd ./ct_node_basic
     mv Dockerfile ../'''
-<<<<<<< HEAD
-    sh ''' echo Building docker image...
-    sudo docker build . --build-arg port=${APP_PORT} -t ${PROJECT_NAME}
-    sudo docker save -o ${PROJECT_NAME}.tar ${PROJECT_NAME}:latest
-=======
         sh ''' echo Building docker image...
     docker build . --build-arg port=${APP_PORT} -t ${PROJECT_NAME}
     docker save -o ${PROJECT_NAME}.tar ${PROJECT_NAME}:latest
->>>>>>> 628e51c7daa4c933ee5d78796e2af79bc2515208
     gzip ${PROJECT_NAME}.tar
     '''
     }
@@ -36,31 +30,8 @@ terraform plan -var stack=${STACK} -var aws_access_key=${AWS_ACCESS_KEY} -var aw
     stage("Build cloud infrastructre") {
         sh ''' cd ./ct_node_basic/infrastructure
 terraform apply -auto-approve -var stack=${STACK} -var aws_access_key=${AWS_ACCESS_KEY} -var aws_secret_key=${AWS_SECRET_KEY} -var git_project=${PROJECT_NAME} -var port=${APP_PORT} -var version=${VERSION} -var region=${REGION} . '''
-<<<<<<< HEAD
-}
-stage("Destroy"){
-try {
-timeout(time: 5, unit: 'MINUTES') {
- // change to a convenient timeout for you
- userInput = input( id: 'Proceed1', message: 'Was this successful?',
-  parameters: [ [$class: 'BooleanParameterDefinition', defaultValue: true, description: '', name: 'Please confirm you agree with this'] ])
-   } }
-    catch(err) {
-    // timeout reached or input false
-     def user = err.getCauses()[0].getUser()
-     if('SYSTEM' == user.toString()) {
-      // SYSTEM means timeout.
-      didTimeout = true
-      }
-      else {
-       userInput = false echo "Aborted by: [${user}]" } }
-       if(userInput==true){
-        sh '''
-        cd ./ct_node_basic/infrastructure
-         terraform destroy -force -var stack=${STACK} -var aws_access_key=${AWS_ACCESS_KEY} -var aws_secret_key=${AWS_SECRET_KEY} -var git_project=${PROJECT_NAME} -var port=${APP_PORT} -var version=${VERSION} -var region=${REGION}
-         ''' } } }
-=======
     }
-
+    stage("Destroy") {
+               sh''' terraform destroy -force -var stack=${STACK} -var aws_access_key=${AWS_ACCESS_KEY} -var aws_secret_key=${AWS_SECRET_KEY} -var git_project=${PROJECT_NAME} -var port=${APP_PORT} -var version=${VERSION} -var region=${REGION}'''
+    }
 }
->>>>>>> 628e51c7daa4c933ee5d78796e2af79bc2515208
