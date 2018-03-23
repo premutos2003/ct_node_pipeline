@@ -15,11 +15,12 @@ node {
     cd ./ct_node_basic
     mv Dockerfile ../'''
         sh ''' echo Building docker image...
-    docker build . --build-arg port=${APP_PORT} -t ${PROJECT_NAME}
+    docker build . --build-arg port=${APP_PORT}  --build-arg folder=${PROJECT_NAME} -t ${PROJECT_NAME}
     docker save -o ${PROJECT_NAME}.tar ${PROJECT_NAME}:latest
     gzip ${PROJECT_NAME}.tar
     '''
     }
+
     stage("Plan cloud infrastructre") {
         sh '''
 echo Planning cloud infrastructre
