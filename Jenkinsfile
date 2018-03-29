@@ -1,6 +1,7 @@
 def userInput = true
 def didTimeout = false
 node {
+
     stage("Clone app to workspace")
             {
                 deleteDir()
@@ -20,19 +21,23 @@ node {
     gzip ${PROJECT_NAME}.tar
     '''
     }
-
-    stage("Plan cloud infrastructre") {
+    stage("Setup Deploy Keys") {
         sh '''
 echo Planning cloud infrastructre
-cd ./ct_node_basic/infrastructure
+cd ./ct_node_basic/key
 terraform init
-terraform plan -var stack=${STACK} -var aws_access_key=${AWS_ACCESS_KEY} -var aws_secret_key=${AWS_SECRET_KEY} -var git_project=${PROJECT_NAME} -var port=${APP_PORT} -var version=${VERSION} -var region=${REGION} '''
+terraform apply --auto-approve -var stack=${STACK} -var aws_access_key=${AWS_ACCESS_KEY} -var aws_secret_key=${AWS_SECRET_KEY} -var git_project=${PROJECT_NAME} -var port=${APP_PORT} -var version=${VERSION} -var region=${REGION} '''
     }
     stage("Build cloud infrastructre") {
         sh ''' cd ./ct_node_basic/infrastructure
+        terraform init
 terraform apply -auto-approve -var stack=${STACK} -var aws_access_key=${AWS_ACCESS_KEY} -var aws_secret_key=${AWS_SECRET_KEY} -var git_project=${PROJECT_NAME} -var port=${APP_PORT} -var version=${VERSION} -var region=${REGION} . '''
     }
-    stage("Destroy") {
-               sh''' terraform destroy -force -var stack=${STACK} -var aws_access_key=${AWS_ACCESS_KEY} -var aws_secret_key=${AWS_SECRET_KEY} -var git_project=${PROJECT_NAME} -var port=${APP_PORT} -var version=${VERSION} -var region=${REGION}'''
-    }
+     stage("Push state to storage") {
+            sh '''
+            cd ./ct_node_basic/infrastructure
+            aws s3 cp terraform.tfstate s3://${STACK}-${PROJECT_NAME}/state --region ${REGION}
+            aws s3 cp terraform.tfstate.backup s3://${STACK}-${PROJECT_NAME}/state --region ${REGION}
+           '''
+        }
 }
