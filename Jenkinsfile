@@ -29,6 +29,7 @@ node {
     echo $folder
 
     mv Dockerfile ../
+    cd ..
     echo Building docker image...
     docker build . --build-arg port=${APP_PORT}  --build-arg folder=$folder -t ${PROJECT_NAME}
     docker save -o ${PROJECT_NAME}.tar ${PROJECT_NAME}:latest
