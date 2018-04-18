@@ -32,12 +32,14 @@ terraform init
 terraform apply --auto-approve -var stack=${STACK} -var aws_access_key=${AWS_ACCESS_KEY} -var aws_secret_key=${AWS_SECRET_KEY} -var git_project=${PROJECT_NAME} -var port=${APP_PORT} -var version=${VERSION} -var region=${REGION} '''
     }
 
+
     stage("Build cloud infrastructre") {
         sh '''
+        str = $(curl -v -sS 'localhost:3000/infra')
 
-
-        sg_id = $(curl localhost:3000/infra | jq -r .[0]'.sg_id')
-        subnet_id = $(curl localhost:3000/infra | jq -r .[0]'.subnet_id')
+        kms = $(echo $str | jq -r '.[0] .kms')
+        sg_id = $(echo $str | jq -r  '.[0] .sg_id')
+        subnet_id = $(echo $str |jq -r '.[0] .subnet_id')
 
         cd ./ct_node_basic/infrastructure
         terraform init
