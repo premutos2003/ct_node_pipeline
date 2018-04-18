@@ -14,7 +14,8 @@ node {
     stage("Build Docker image/artifact") {
         sh '''
     cd ./ct_node_basic
-    folder='$(cut -d'_' -f4 <<< '${GIT_URL}' )'
+    project="$(cut -d'/' -f5 <<< ${GIT_URL} )"
+    folder="$(cut -d'.' -f1 <<< $project )"
     mv Dockerfile ../
     echo Building docker image...
     docker build . --build-arg port=${APP_PORT}  --build-arg folder=$folder -t ${PROJECT_NAME}
