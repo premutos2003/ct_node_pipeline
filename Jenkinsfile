@@ -35,7 +35,7 @@ terraform apply --auto-approve -var stack=${STACK} -var kms_key_arn=${kms} -var 
 
     stage("Build cloud infrastructre") {
         sh '''
-        str = $(curl -v -sS 'localhost:3000/infra')
+        str = $(curl -v -sS 'docker.for.mac.localhost:3000/infra')
 
         kms = $(echo $str | jq -r '.[0] .kms')
         sg_id = $(echo $str | jq -r  '.[0] .sg_id')
