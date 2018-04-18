@@ -14,9 +14,10 @@ node {
     stage("Build Docker image/artifact") {
         sh '''
     cd ./ct_node_basic
+    IFS='/' read -r -a split <<< ${GIT_URL}
     mv Dockerfile ../'''
         sh ''' echo Building docker image...
-    docker build . --build-arg port=${APP_PORT}  --build-arg folder=${PROJECT_NAME} -t ${PROJECT_NAME}
+    docker build . --build-arg port=${APP_PORT}  --build-arg folder="${split[4]}" -t ${PROJECT_NAME}
     docker save -o ${PROJECT_NAME}.tar ${PROJECT_NAME}:latest
     gzip ${PROJECT_NAME}.tar
     '''
