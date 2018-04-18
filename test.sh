@@ -1,7 +1,15 @@
 #!/usr/bin/env bash
 
+url="${GIT_URL}"
+set -f; IFS='/'
+set -- $url
+ tag=$5
+set +f; unset IFS
 
-project="$(cut -d'/' -f5 <<< ${GIT_URL} )"
-folder="$(cut -d'.' -f1 <<< $project )"
+
+set -f; IFS='.'
+set -- $tag
+folder=$1;
+set +f; unset IFS
 
 echo $folder
