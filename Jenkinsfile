@@ -15,8 +15,8 @@ node {
         sh '''
     cd ./ct_node_basic
     IFS='/' read -r -a split <<< ${GIT_URL}
-    mv Dockerfile ../'''
-        sh ''' echo Building docker image...
+    mv Dockerfile ../
+    echo Building docker image...
     docker build . --build-arg port=${APP_PORT}  --build-arg folder="${split[4]}" -t ${PROJECT_NAME}
     docker save -o ${PROJECT_NAME}.tar ${PROJECT_NAME}:latest
     gzip ${PROJECT_NAME}.tar
