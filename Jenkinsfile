@@ -27,7 +27,7 @@ node {
     set +f; unset IFS
 
     echo $folder
-    cd ./ct_node_basic
+
     mv Dockerfile ../
     echo Building docker image...
     docker build . --build-arg port=${APP_PORT}  --build-arg folder=$folder -t ${PROJECT_NAME}
