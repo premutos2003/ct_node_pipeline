@@ -43,8 +43,7 @@ terraform apply -auto-approve -var sec_gp_id=${sg_id} -var subnet_id=${subnet_id
      stage("Push state to storage") {
             sh '''
             cd ./ct_node_basic/infrastructure
-            aws s3 cp terraform.tfstate s3://${STACK}-${PROJECT_NAME}/state --region ${REGION}
-            aws s3 cp terraform.tfstate.backup s3://${STACK}-${PROJECT_NAME}/state --region ${REGION}
+            aws s3 cp terraform.tfstate s3://${STACK}-${PROJECT_NAME}/state/terraform.tfstate --region ${REGION}
            '''
         }
 }
