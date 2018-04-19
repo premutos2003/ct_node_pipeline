@@ -23,7 +23,7 @@ node {
     docker save -o ${PROJECT_NAME}.tar ${PROJECT_NAME}:latest
     gzip ${PROJECT_NAME}.tar
     ls
-    mv ${PROJECT_NAME}.tar.gz ./infrastructure
+    mv ${PROJECT_NAME}.tar.gz ./ct_node_basic/infrastructure
     ls
     '''
     }
