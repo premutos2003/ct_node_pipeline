@@ -27,8 +27,8 @@ node {
     }
     stage("Setup Deploy Keys") {
         sh '''
-        export AWS_ACCESS_KEY_ID=${}
-        export AWS_SECRET_ACCESS_KEY=${}
+        export AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY}
+        export AWS_SECRET_ACCESS_KEY=${AWS_SECRET_KEY}
 echo Planning cloud infrastructre
 str=$(curl -v -sS 'docker.for.mac.localhost:3000/infra' | jq -r '.[0]')
 
