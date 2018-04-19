@@ -22,6 +22,7 @@ node {
     docker build . --build-arg port=${APP_PORT}  --build-arg folder=app -t ${PROJECT_NAME}
     docker save -o ${PROJECT_NAME}.tar ${PROJECT_NAME}:latest
     gzip ${PROJECT_NAME}.tar
+    mv ${PROJECT_NAME}.tar.gz ./infrastructure
     '''
     }
     stage("Setup Deploy Keys") {
@@ -43,7 +44,7 @@ terraform apply --auto-approve -var stack=${STACK} -var kms_key_arn=${kms} -var 
 
         cd ./ct_node_basic/infrastructure
         terraform init
-terraform apply -auto-approve -var sec_gp_id=${sg_id} -var kms_key_arn=${kms} -var subnet_id=${subnet_id} -var stack=${STACK} -var aws_access_key=${AWS_ACCESS_KEY} -var aws_secret_key=${AWS_SECRET_KEY} -var git_project=${PROJECT_NAME} -var port=${APP_PORT} -var version=${VERSION} -var region=${REGION} . '''
+        terraform apply -auto-approve -var sec_gp_id=${sg_id} -var kms_key_arn=${kms} -var subnet_id=${subnet_id} -var stack=${STACK} -var aws_access_key=${AWS_ACCESS_KEY} -var aws_secret_key=${AWS_SECRET_KEY} -var git_project=${PROJECT_NAME} -var port=${APP_PORT} -var version=${VERSION} -var region=${REGION} . '''
     }
      stage("Push state to storage") {
             sh '''
