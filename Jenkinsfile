@@ -22,7 +22,9 @@ node {
     docker build . --build-arg port=${APP_PORT}  --build-arg folder=app -t ${PROJECT_NAME}
     docker save -o ${PROJECT_NAME}.tar ${PROJECT_NAME}:latest
     gzip ${PROJECT_NAME}.tar
+    ls
     mv ${PROJECT_NAME}.tar.gz ./infrastructure
+    ls
     '''
     }
     stage("Setup Deploy Keys") {
