@@ -37,7 +37,7 @@ str=$(curl -v -sS 'docker.for.mac.localhost:3000/infra' | jq -r '.[0]')
 kms=$(echo $str | jq -r '.kms')
 cd ./ct_node_basic/key
 terraform init
-terraform apply --auto-approve -var stack=${STACK} -var kms_key_arn=${kms} -var aws_access_key=${AWS_ACCESS_KEY} -var aws_secret_key=${AWS_SECRET_KEY} -var git_project=${PROJECT_NAME} -var port=${APP_PORT} -var version=${VERSION} -var region=${REGION} '''
+terraform apply --auto-approve -var stack=${STACK} -var kms_key_arn=${kms} -var aws_access_key=${AWS_ACCESS_KEY} -var aws_secret_key=${AWS_SECRET_KEY} -var git_project=${PROJECT_NAME} -var port=${APP_PORT} -var environment=${ENV} -var version=${VERSION} -var region=${REGION} '''
     }
 
 
