@@ -53,6 +53,7 @@ terraform apply --auto-approve -var stack=${STACK} -var kms_key_arn=${kms} -var 
         ls
         terraform init
         terraform apply -auto-approve -var sec_gp_id=${sg_id} -var kms_key_arn=${kms} -var subnet_id=${subnet_id} -var stack=${STACK} -var aws_access_key=${AWS_ACCESS_KEY} -var aws_secret_key=${AWS_SECRET_KEY} -var git_project=${PROJECT_NAME} -var port=${APP_PORT} -var version=${VERSION} -var region=${REGION} . '''
+        sh metadata.sh
     }
      stage("Push state to storage") {
             sh '''
@@ -61,7 +62,6 @@ terraform apply --auto-approve -var stack=${STACK} -var kms_key_arn=${kms} -var 
 
             export AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY}
             export AWS_SECRET_ACCESS_KEY=${AWS_SECRET_KEY}
-            sh metadata.sh
             aws s3 cp terraform.tfstate s3://${STACK}-${PROJECT_NAME}/state/terraform.tfstate --region ${REGION}
            '''
         }
