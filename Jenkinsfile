@@ -19,7 +19,7 @@ node {
     mv Dockerfile ../
     cd ..
     echo Building docker image...
-    docker build -t ${PROJECT_NAME}  --build-arg port=${APP_PORT} --build-arg run_cmd=${RUN_CMD} --build-arg folder=app .
+    docker build -t ${PROJECT_NAME}  --build-arg port=${APP_PORT} --build-arg run_cmd=${RUN_CMD}  .
     docker save -o ${PROJECT_NAME}.tar ${PROJECT_NAME}:latest
     gzip ${PROJECT_NAME}.tar
     ls
@@ -66,8 +66,8 @@ terraform apply --auto-approve -var stack=${STACK} -var kms_key_arn=${kms} -var 
 
        '''
     }
-     stage("Push state to storage") {
-            sh '''
+    stage("Push state to storage") {
+        sh '''
 
             cd ./ct_node_basic/infrastructure
 
@@ -75,5 +75,5 @@ terraform apply --auto-approve -var stack=${STACK} -var kms_key_arn=${kms} -var 
             export AWS_SECRET_ACCESS_KEY=${AWS_SECRET_KEY}
             aws s3 cp terraform.tfstate s3://${STACK}-${PROJECT_NAME}/state/terraform.tfstate --region ${REGION}
            '''
-        }
+    }
 }
