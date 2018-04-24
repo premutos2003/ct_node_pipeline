@@ -32,7 +32,7 @@ node {
         export AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY}
         export AWS_SECRET_ACCESS_KEY=${AWS_SECRET_KEY}
 echo Planning cloud infrastructre
-str=$(curl -v -sS 'docker.for.mac.localhost:3000/infra' | jq -r '.[0]')
+str=$(curl -v -sS 'docker.for.mac.localhost:3000/infra?id=$ENV-$REGION' | jq -r '.[0]')
 
 kms=$(echo $str | jq -r '.kms')
 cd ./ct_node_basic/key
@@ -43,7 +43,7 @@ terraform apply --auto-approve -var stack=${STACK} -var kms_key_arn=${kms} -var 
 
     stage("Build cloud infrastructre") {
         sh '''
-        str=$(curl -v -sS 'docker.for.mac.localhost:3000/infra' | jq -r '.[0]')
+        str=$(curl -v -sS 'docker.for.mac.localhost:3000/infra?id=$ENV-$REGION' | jq -r '.[0]')
 
         kms=$(echo $str | jq -r '.kms')
         sg_id=$(echo $str | jq -r  '.sg_id')
@@ -60,8 +60,8 @@ terraform apply --auto-approve -var stack=${STACK} -var kms_key_arn=${kms} -var 
         app_id=$(terraform output -json  | jq -r  '.app_id.value')
         stack=$(terraform output -json  | jq -r  '.stack.value')
         region=$(terraform output -json  | jq -r  '.region.value')
-
-        curl -X POST -d app_instance_ip=$app_instance_ip -d app_instance_id=$app_instance_id -d stack=$stack -d app_id=$app_id -d region=$region docker.for.mac.localhost:3000/app_infra
+        env_id=${ENV}-${REGION}
+        curl -X POST -d env_id=$env_id -d app_instance_ip=$app_instance_ip -d app_instance_id=$app_instance_id -d stack=$stack -d app_id=$app_id -d region=$region docker.for.mac.localhost:3000/app_infra
 
 
        '''
