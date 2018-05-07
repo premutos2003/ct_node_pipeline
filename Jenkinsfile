@@ -68,9 +68,9 @@ terraform apply --auto-approve -var stack=${STACK} -var kms_key_arn=${kms} -var 
     }
     stage("Push state to storage") {
         sh '''
-
+            app_id=${PROJECT_NAME}-${ENV}
             cd ./ct_node_basic/infrastructure
-
+            curl -X POST -d id=$app_id -d status=running docker.for.mac.localhost:3000/status
             export AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY}
             export AWS_SECRET_ACCESS_KEY=${AWS_SECRET_KEY}
             aws s3 cp terraform.tfstate s3://${STACK}-${PROJECT_NAME}/state/terraform.tfstate --region ${REGION}
