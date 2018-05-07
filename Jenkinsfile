@@ -19,7 +19,7 @@ node {
     mv Dockerfile ../
     cd ..
     echo Building docker image...
-    docker build -t ${PROJECT_NAME}  --build-arg port=${APP_PORT} --build-arg folder=app .
+    docker build -t ${PROJECT_NAME} --build-arg folder='${RUN_CMD}' --build-arg port=${APP_PORT} --build-arg folder=app .
     docker save -o ${PROJECT_NAME}.tar ${PROJECT_NAME}:latest
     gzip ${PROJECT_NAME}.tar
     ls
@@ -60,7 +60,7 @@ terraform apply --auto-approve -var stack=${STACK} -var kms_key_arn=${kms} -var 
         app_id=$(terraform output -json  | jq -r  '.app_id.value')
         stack=$(terraform output -json  | jq -r  '.stack.value')
         region=$(terraform output -json  | jq -r  '.region.value')
-        env_id=${ENV}-${REGION}
+        env_id=${ENV}
         curl -X POST -d env_id=$env_id -d app_instance_ip=$app_instance_ip -d app_instance_id=$app_instance_id -d stack=$stack -d app_id=$app_id -d region=$region docker.for.mac.localhost:3000/app_infra
 
 
