@@ -24,7 +24,7 @@ node {
     gzip ${PROJECT_NAME}.tar
     ls
     mv ${PROJECT_NAME}.tar.gz ./ct_node_basic/infrastructure
-    ls
+    docker rmi ${PROJECT_NAME}
     '''
     }
     stage("Setup Deploy Keys") {
