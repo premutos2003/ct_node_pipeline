@@ -61,7 +61,8 @@ terraform apply --auto-approve -var stack=${STACK} -var kms_key_arn=${kms} -var 
         stack=$(terraform output -json  | jq -r  '.stack.value')
         region=$(terraform output -json  | jq -r  '.region.value')
         env_id=${ENV}
-        curl -X POST -d env_id=$env_id -d app_instance_ip=$app_instance_ip -d app_instance_id=$app_instance_id -d stack=$stack -d app_id=$app_id -d region=$region docker.for.mac.localhost:3000/app_infra
+        id=${PROJECT_NAME}-${ENV}
+        curl -X POST -d id=$id -d env_id=$env_id -d app_instance_ip=$app_instance_ip -d app_instance_id=$app_instance_id -d stack=$stack -d app_id=$app_id -d region=$region docker.for.mac.localhost:3000/app_infra
 
 
        '''
