@@ -19,7 +19,7 @@ node {
     mv Dockerfile ../
     cd ..
     echo Building docker image...
-    docker build -t ${PROJECT_NAME}  --build-arg port=${APP_PORT} --build-arg run_cmd=${RUN_CMD} --build-arg folder=app .
+    docker build -t ${PROJECT_NAME}  --build-arg port=${APP_PORT} run_cmd=${RUN_CMD} --build-arg folder=app .
     docker save -o ${PROJECT_NAME}.tar ${PROJECT_NAME}:latest
     gzip ${PROJECT_NAME}.tar
     ls
