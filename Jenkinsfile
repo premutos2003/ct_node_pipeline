@@ -9,7 +9,7 @@ node {
                 sh 'echo cloning app to workspace'
             }
     stage("Clone infrastructure config to workspace") {
-        sh 'git clone https://github.com/premutos2003/ct_node_basic.git'
+        sh 'git clone https://github.com/premutos2003/ct_node_mongo.git'
     }
     stage("Build Docker image/artifact") {
         sh '''
