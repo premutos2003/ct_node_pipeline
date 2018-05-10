@@ -13,7 +13,7 @@ node {
     }
     stage("Build Docker image/artifact") {
         sh '''
-    cd ./ct_node_basic
+    cd ./ct_node_mongo
 
 
     mv Dockerfile ../
@@ -23,7 +23,7 @@ node {
     docker save -o ${PROJECT_NAME}.tar ${PROJECT_NAME}:latest
     gzip ${PROJECT_NAME}.tar
     ls
-    mv ${PROJECT_NAME}.tar.gz ./ct_node_basic/infrastructure
+    mv ${PROJECT_NAME}.tar.gz ./ct_node_mongo/infrastructure
     docker rmi ${PROJECT_NAME}
     '''
     }
@@ -35,7 +35,7 @@ echo Planning cloud infrastructre
 str=$(curl -v -sS 'docker.for.mac.localhost:3000/infra?id=$ENV-$REGION' | jq -r '.[0]')
 
 kms=$(echo $str | jq -r '.kms')
-cd ./ct_node_basic/key
+cd ./ct_node_mongo/key
 terraform init
 terraform apply --auto-approve -var stack=${STACK} -var kms_key_arn=${kms} -var aws_access_key=${AWS_ACCESS_KEY} -var aws_secret_key=${AWS_SECRET_KEY} -var git_project=${PROJECT_NAME} -var port=${APP_PORT} -var environment=${ENV} -var version=${VERSION} -var region=${REGION} '''
     }
@@ -49,7 +49,7 @@ terraform apply --auto-approve -var stack=${STACK} -var kms_key_arn=${kms} -var 
         sg_id=$(echo $str | jq -r  '.sg_id')
         subnet_id=$(echo $str |jq -r '.subnet_id')
 
-        cd ./ct_node_basic/infrastructure
+        cd ./ct_node_mongo/infrastructure
         ls
         terraform init
         terraform apply -auto-approve -var sec_gp_id=${sg_id} -var kms_key_arn=${kms} -var subnet_id=${subnet_id} -var stack=${STACK} -var aws_access_key=${AWS_ACCESS_KEY} -var aws_secret_key=${AWS_SECRET_KEY} -var environment=${ENV} -var git_project=${PROJECT_NAME} -var port=${APP_PORT} -var version=${VERSION} -var region=${REGION} .
@@ -70,7 +70,7 @@ terraform apply --auto-approve -var stack=${STACK} -var kms_key_arn=${kms} -var 
     stage("Push state to storage") {
         sh '''
             app_id=${PROJECT_NAME}-${ENV}
-            cd ./ct_node_basic/infrastructure
+            cd ./ct_node_mongo/infrastructure
             curl -X POST -d id=$app_id -d status=running docker.for.mac.localhost:3000/status/app
             export AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY}
             export AWS_SECRET_ACCESS_KEY=${AWS_SECRET_KEY}
