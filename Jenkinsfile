@@ -14,10 +14,15 @@ node {
     stage("Build Docker image/artifact") {
         sh '''
     mv ./ct_node_mongo/Dockerfile ./
-    mv ./ct_node_mongo/docker-compose.yml ./
-
+    mv ./ct_node_mongo/infrastructure/docker-compose.yml ./
+    mv ./ct_node_mongo/entrypoint.sh ./
+    echo checking for app entrypoint
+    mv entrypoint.sh app
+    entrypoint=$("$app/entrypoint.sh")
+    if [[ "$entrypoint" == *.js ]];then
+        entrypoint = pm2 $entrypoint
     echo Building docker image...
-    docker build -t ${PROJECT_NAME}  --build-arg port=${APP_PORT} --build-arg folder=app .
+    docker build -t ${PROJECT_NAME}  --build-arg port=${APP_PORT} --build-arg entry="$entrypoint" --build-arg folder=app .
     docker save -o ${PROJECT_NAME}.tar ${PROJECT_NAME}:latest
     gzip ${PROJECT_NAME}.tar
     ls
