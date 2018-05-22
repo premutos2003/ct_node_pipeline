@@ -46,7 +46,7 @@ if [ "$entrypoint" = "null" ];then
 
 	fi
 else
-   if [[ "node" = *"$entrypoint"* ]]; then
+   if [ "node" = *"$entrypoint"* ];then
         entrypoint=${$entrypoint/node/pm2 start}
 
    fi
