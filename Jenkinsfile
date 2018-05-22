@@ -49,9 +49,9 @@ else
 if [[ "$entrypoint == *"node"* ]]; then
     entrypoint=${entrypoint/node/start}
     entrypoint="pm2 $entrypoint"
-    echo $entrypoint;
+    echo $entrypoint
 else
-    echo "'$entry does not contain '$node'";
+    echo no
 fi
 fi
 cd ..
