@@ -14,10 +14,44 @@ node {
     stage("Build Docker image/artifact") {
         sh '''
     mv ./ct_node_mongo/Dockerfile ./
-    mv ./ct_node_mongo/docker-compose.yml ./
+    mv ./ct_node_mongo/infrastructure/docker-compose.yml ./
+    cd app
+    entrypoint=$(jq .scripts.start package.json)
+if [ "$entrypoint" = "null" ];then
+	echo no start script
+	entrypoint=$(jq .main package.json)
+	if [ "$entrypoint" != "null" ];then
+		echo $entrypoint main entrypoint
+		entrypoint ="pm2 $entrypoint"
+	else
+		echo no main
+		if [ -e index.js ];then
+			entrypoint="pm2 index.js"
+			echo index.js found $entrypoint
+		else
+			echo no index.js found
+			if [ -e app.js ];then
+				entrypoint="pm2 app.js"
+				echo app.js found $entrypoint
+			else
+				echo no app.js found
+				if [ -e server.js ];then
+					entrypoint="pm2 server.js"
+					echo server.js found $entrypoint
+				else
+					echo no entrypoint found
+				fi
+			fi
+		fi
 
+	fi
+else
+	echo start script $entrypoint
+	entrypoint="pm2 $entrypoint"
+fi
+cd ..
     echo Building docker image...
-    docker build -t ${PROJECT_NAME}  --build-arg port=${APP_PORT} --build-arg folder=app .
+    docker build -t ${PROJECT_NAME}  --build-arg port=${APP_PORT} --build-arg entry="$entrypoint" --build-arg folder=app .
     docker save -o ${PROJECT_NAME}.tar ${PROJECT_NAME}:latest
     gzip ${PROJECT_NAME}.tar
     ls
