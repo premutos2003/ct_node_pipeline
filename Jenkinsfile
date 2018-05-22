@@ -18,7 +18,7 @@ node {
     mv ./ct_node_mongo/entrypoint.sh ./
     echo checking for app entrypoint
     mv entrypoint.sh app
-    entrypoint=$("$app/entrypoint.sh")
+    entrypoint=$("$./app/entrypoint.sh")
     if [[ "$entrypoint" == *.js ]];then
         entrypoint = pm2 $entrypoint
     echo Building docker image...
