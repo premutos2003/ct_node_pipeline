@@ -46,11 +46,13 @@ if [ "$entrypoint" = "null" ];then
 
 	fi
 else
-   if [ "node" = *"$entrypoint"* ];then
-        entrypoint=${$entrypoint/node/pm2 start}
-
-   fi
-	echo start script $entrypoint
+if [[ "$entrypoint == *"node"* ]]; then
+    entrypoint=${entrypoint/node/start}
+    entrypoint="pm2 $entrypoint"
+    echo "'$entrypoint' ";
+else
+    echo "'$entry does not contain '$node'";
+fi
 fi
 cd ..
     echo Building docker image...
