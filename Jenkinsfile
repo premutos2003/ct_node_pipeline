@@ -26,17 +26,17 @@ if [ "$entrypoint" = "null" ];then
 	else
 		echo no main
 		if [ -e index.js ];then
-			entrypoint="pm2 index.js"
+			entrypoint="pm2 start index.js"
 			echo index.js found $entrypoint
 		else
 			echo no index.js found
 			if [ -e app.js ];then
-				entrypoint="pm2 app.js"
+				entrypoint="pm2 start app.js"
 				echo app.js found $entrypoint
 			else
 				echo no app.js found
 				if [ -e server.js ];then
-					entrypoint="pm2 server.js"
+					entrypoint="pm2 start server.js"
 					echo server.js found $entrypoint
 				else
 					echo no entrypoint found
@@ -46,8 +46,11 @@ if [ "$entrypoint" = "null" ];then
 
 	fi
 else
+   if [[ noce = *"$entrypoint"* ]]; then
+        entrypoint=${$entrypoint/node/pm2 start}
+
+   fi
 	echo start script $entrypoint
-	entrypoint="pm2 $entrypoint"
 fi
 cd ..
     echo Building docker image...
