@@ -19,7 +19,7 @@ node {
     echo checking for app entrypoint
     mv entrypoint.sh app
     cd app
-    entrypoint=$("$./entrypoint.sh")
+    entrypoint=$("$entrypoint.sh")
     if [[ "$entrypoint" == *.js ]];then
         entrypoint = pm2 $entrypoint
     cd ..
