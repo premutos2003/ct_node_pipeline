@@ -49,7 +49,6 @@ else
 if [[ "$entrypoint == *"node"* ]]; then
     entrypoint=${entrypoint/node/start}
     entrypoint="pm2 $entrypoint"
-    echo $entrypoint
 else
     echo no
 fi
