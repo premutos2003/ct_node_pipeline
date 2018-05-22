@@ -18,9 +18,11 @@ node {
     mv ./ct_node_mongo/entrypoint.sh ./
     echo checking for app entrypoint
     mv entrypoint.sh app
-    entrypoint=$("$./app/entrypoint.sh")
+    cd app
+    entrypoint=$("$./entrypoint.sh")
     if [[ "$entrypoint" == *.js ]];then
         entrypoint = pm2 $entrypoint
+    cd ..
     echo Building docker image...
     docker build -t ${PROJECT_NAME}  --build-arg port=${APP_PORT} --build-arg entry="$entrypoint" --build-arg folder=app .
     docker save -o ${PROJECT_NAME}.tar ${PROJECT_NAME}:latest
