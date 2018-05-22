@@ -15,14 +15,39 @@ node {
         sh '''
     mv ./ct_node_mongo/Dockerfile ./
     mv ./ct_node_mongo/infrastructure/docker-compose.yml ./
-    mv ./ct_node_mongo/entrypoint.sh ./
-    echo checking for app entrypoint
-    mv entrypoint.sh app
     cd app
-    entrypoint=$("$entrypoint.sh")
-    if [[ "$entrypoint" == *.js ]];then
-        entrypoint = pm2 $entrypoint
-    cd ..
+    entrypoint=$(jq .scripts.start package.json)
+if [ "$entrypoint" = "null" ];then
+	echo no start script
+	entrypoint=$(jq .main package.json)
+	if [ "$entrypoint" != "null" ];then
+		echo $entrypoint main entrypoint
+	else
+		echo no main
+		if [ -e index.js ];then
+			entrypoint=index.js
+			echo index.js found $entrypoint
+		else
+			echo no index.js found
+			if [ -e app.js ];then
+				entrypoint=app.js
+				echo app.js found $entrypoint
+			else
+				echo no app.js found
+				if [ -e server.js ];then
+					entrypoint=server.js
+					echo server.js found $entrypoint
+				else
+					echo no entrypoint found
+				fi
+			fi
+		fi
+
+	fi
+else
+	echo start script $entrypoint
+fi
+cd ..
     echo Building docker image...
     docker build -t ${PROJECT_NAME}  --build-arg port=${APP_PORT} --build-arg entry="$entrypoint" --build-arg folder=app .
     docker save -o ${PROJECT_NAME}.tar ${PROJECT_NAME}:latest
