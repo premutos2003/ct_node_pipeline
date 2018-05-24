@@ -47,7 +47,7 @@ if [ "$entrypoint" = "null" ];then
 	fi
 else
 #!/bin/bash
-if [[ "$entrypoint" = *"node"* ]];then
+if [ "$entrypoint" = *"node"* ];then
     entrypoint=${entrypoint/node/start}
     echo $entrypoint
 else
