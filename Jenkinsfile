@@ -50,7 +50,7 @@ if [[ "$entrypoint" = *node* ]]; then
     entrypoint=${entrypoint/node/start}
     echo $entrypoint
 else
-    echo no
+    echo no node $entrypoint
 fi
 fi
 cd ..
