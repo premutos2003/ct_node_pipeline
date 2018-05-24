@@ -52,6 +52,7 @@ then
 entrypoint=${entrypoint/node/"pm2 start"}
 echo $entrypoint
 fi
+fi
 cd ..
     echo Building docker image...
     docker build -t ${PROJECT_NAME}  --build-arg port=${APP_PORT} --build-arg entry="$entrypoint" --build-arg folder=app .
