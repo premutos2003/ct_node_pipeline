@@ -49,7 +49,7 @@ else
 if
 echo "$entrypoint" | grep -q "node"
 then
-entrypoint=${entrypoint/node/"pm2 start"}
+entrypoint=${entrypoint/node/start}
 echo $entrypoint
 fi
 fi
