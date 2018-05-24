@@ -12,7 +12,7 @@ node {
         sh 'git clone https://github.com/premutos2003/ct_node_mongo.git'
     }
     stage("Build Docker image/artifact") {
-        sh '''
+        sh '''#!/bin/bash -xe
     mv ./ct_node_mongo/Dockerfile ./
     mv ./ct_node_mongo/infrastructure/docker-compose.yml ./
     cd app
@@ -49,7 +49,7 @@ else
 if
 echo "$entrypoint" | grep -q "node"
 then
-entrypoint=${entrypoint/node/start}
+entrypoint=${entrypoint/node/"pm2 start"}
 echo $entrypoint
 fi
 fi
