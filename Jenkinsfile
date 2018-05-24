@@ -46,13 +46,11 @@ if [ "$entrypoint" = "null" ];then
 
 	fi
 else
-#!/bin/bash
-if [ "$entrypoint" = *"node"* ];then
-    entrypoint=${entrypoint/node/start}
-    echo $entrypoint
-else
-    echo no node $entrypoint
-fi
+if
+echo "$entrypoint" | grep -q "node"
+then
+entrypoint=${entrypoint/node/"pm2 start"}
+echo $entrypoint
 fi
 cd ..
     echo Building docker image...
