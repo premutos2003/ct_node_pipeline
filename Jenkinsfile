@@ -112,7 +112,7 @@ cd ..
             export AWS_SECRET_ACCESS_KEY=${AWS_SECRET_KEY}
             aws s3 cp terraform.tfstate s3://app-state-${STACK}-${PROJECT_NAME}/state/terraform.tfstate --region ${REGION}
            cd ../key
-           aws s3 cp terraform.tfstate s3://${STACK}-${PROJECT_NAME}/keystate/terraform.tfstate --region ${REGION}
+           aws s3 cp terraform.tfstate s3://app-state-${STACK}-${PROJECT_NAME}/keystate/terraform.tfstate --region ${REGION}
            '''
     }
 
