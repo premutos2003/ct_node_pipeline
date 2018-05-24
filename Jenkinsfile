@@ -110,7 +110,7 @@ cd ..
             curl -X POST -d id=$app_id -d status=running docker.for.mac.localhost:3000/status/app
             export AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY}
             export AWS_SECRET_ACCESS_KEY=${AWS_SECRET_KEY}
-            aws s3 cp terraform.tfstate s3://${STACK}-${PROJECT_NAME}/state/terraform.tfstate --region ${REGION}
+            aws s3 cp terraform.tfstate s3://app-state-${STACK}-${PROJECT_NAME}/state/terraform.tfstate --region ${REGION}
            cd ../key
            aws s3 cp terraform.tfstate s3://${STACK}-${PROJECT_NAME}/keystate/terraform.tfstate --region ${REGION}
            '''
