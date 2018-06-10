@@ -50,7 +50,7 @@ if
 echo "$entrypoint" | grep -q "node"
 then
 entrypoint=${entrypoint/node/"pm2 start"}
-entrypoint=$entrypoint --no-daemon
+entrypoint="$entrypoint --no-daemon"
 echo $entrypoint
 fi
 fi
