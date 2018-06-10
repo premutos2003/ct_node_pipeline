@@ -47,9 +47,9 @@ if [ "$entrypoint" = "null" ];then
 	fi
 else
 if
-echo "$entrypoint" | grep -q "node"
+echo $entrypoint | grep -q node
 then
-entrypoint=${entrypoint/node/"pm2 start"}
+entrypoint=${entrypoint/node/pm2 start}
 entrypoint="$entrypoint --no-daemon"
 echo $entrypoint
 fi
