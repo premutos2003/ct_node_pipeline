@@ -22,7 +22,7 @@ if [ "$entrypoint" = "null" ];then
 	entrypoint=$(jq -r .main package.json)
 	if [ "$entrypoint" != "null" ];then
 		echo $entrypoint main entrypoint
-		entrypoint= "pm2 start $entrypoint  --no-daemon"
+		entrypoint="pm2 start $entrypoint  --no-daemon"
 	else
 		echo no main
 		if [ -e index.js ];then
