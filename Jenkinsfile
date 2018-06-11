@@ -51,7 +51,6 @@ echo $entrypoint | grep -q node
 then
 entrypoint=${entrypoint/node/pm2 start}
 entrypoint="$entrypoint --no-daemon"
-entrypoint=$(echo "$entrypoint" | tr -d "'")
 echo $entrypoint
 fi
 fi
