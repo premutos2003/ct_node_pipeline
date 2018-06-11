@@ -16,7 +16,7 @@ node {
     mv ./ct_node_mongo/Dockerfile ./
     mv ./ct_node_mongo/infrastructure/docker-compose.yml ./
     cd app
-    entrypoint=$(jq .scripts.start package.json)
+    entrypoint=$(jq -r .scripts.start package.json)
 if [ "$entrypoint" = "null" ];then
 	echo no start script
 	entrypoint=$(jq .main package.json)
