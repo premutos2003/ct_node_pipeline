@@ -22,21 +22,21 @@ if [ "$entrypoint" = "null" ];then
 	entrypoint=$(jq -r .main package.json)
 	if [ "$entrypoint" != "null" ];then
 		echo $entrypoint main entrypoint
-		entrypoint= "pm2 $entrypoint"
+		entrypoint= "pm2 start $entrypoint  --no-daemon"
 	else
 		echo no main
 		if [ -e index.js ];then
-			entrypoint="pm2 start index.js"
+			entrypoint="pm2 start index.js  --no-daemon"
 			echo index.js found $entrypoint
 		else
 			echo no index.js found
 			if [ -e app.js ];then
-				entrypoint="pm2 start app.js"
+				entrypoint="pm2 start app.js  --no-daemon"
 				echo app.js found $entrypoint
 			else
 				echo no app.js found
 				if [ -e server.js ];then
-					entrypoint="pm2 start server.js"
+					entrypoint="pm2 start server.js  --no-daemon"
 					echo server.js found $entrypoint
 				else
 					echo no entrypoint found
