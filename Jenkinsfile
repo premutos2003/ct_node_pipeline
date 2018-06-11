@@ -51,12 +51,13 @@ echo $entrypoint | grep -q node
 then
 entrypoint=${entrypoint/node/pm2 start}
 entrypoint="$entrypoint --no-daemon"
+entrypoint=$(echo "$entrypoint" | tr -d "'")
 echo $entrypoint
 fi
 fi
 cd ..
     echo Building docker image...
-    docker build -t ${PROJECT_NAME}  --build-arg entry="$entrypoint" --build-arg port=${APP_PORT}  --build-arg folder=app .
+    docker build -t ${PROJECT_NAME}  --build-arg entry='$entrypoint' --build-arg port=${APP_PORT}  --build-arg folder=app .
     docker save -o ${PROJECT_NAME}.tar ${PROJECT_NAME}:latest
     gzip ${PROJECT_NAME}.tar
     ls
