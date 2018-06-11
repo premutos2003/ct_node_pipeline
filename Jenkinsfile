@@ -19,10 +19,10 @@ node {
     entrypoint=$(jq -r .scripts.start package.json)
 if [ "$entrypoint" = "null" ];then
 	echo no start script
-	entrypoint=$(jq .main package.json)
+	entrypoint=$(jq -r .main package.json)
 	if [ "$entrypoint" != "null" ];then
 		echo $entrypoint main entrypoint
-		entrypoint ="pm2 $entrypoint"
+		entrypoint= "pm2 $entrypoint"
 	else
 		echo no main
 		if [ -e index.js ];then
