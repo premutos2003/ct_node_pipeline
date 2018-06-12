@@ -32,7 +32,7 @@ if [ "$entrypoint" = "null" ];then
 			echo no index.js found
 			if [ -e app.js ];then
 				entrypoint="pm2 start app.js -i max  --no-daemon"
-				echo app.js found $entrypoint
+				echo app.jws found $entrypoint
 			else
 				echo no app.js found
 				if [ -e server.js ];then
@@ -70,7 +70,7 @@ cd ..
         export AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY}
         export AWS_SECRET_ACCESS_KEY=${AWS_SECRET_KEY}
         echo Planning cloud infrastructre
-        str=$(curl -v -sS 'docker.for.mac.localhost:3000/infra?id=$ENV-$REGION' | jq -r '.[0]')
+        str=$(curl -v -sS 'host.docker.internal:3000/infra?id=$ENV-$REGION' | jq -r '.[0]')
         kms=$(echo $str | jq -r '.kms')
         cd ./ct_node_mongo/key
         terraform init
@@ -83,7 +83,7 @@ cd ..
     }
     stage("Build cloud infrastructre") {
         sh '''
-        str=$(curl -v -sS 'docker.for.mac.localhost:3000/infra?id=$ENV-$REGION' | jq -r '.[0]')
+        str=$(curl -v -sS 'host.docker.internal:3000/infra?id=$ENV-$REGION' | jq -r '.[0]')
 
         kms=$(echo $str | jq -r '.kms')
         sg_id=$(echo $str | jq -r  '.sg_id')
@@ -101,14 +101,14 @@ cd ..
         region=$(terraform output -json  | jq -r  '.region.value')
         env_id=${ENV}
         id=${PROJECT_NAME}-${ENV}
-        curl -X POST -d id=$id -d env_id=$env_id -d app_instance_ip=$app_instance_ip -d app_instance_id=$app_instance_id -d stack=$stack -d app_id=$app_id -d region=$region docker.for.mac.localhost:3000/app_infra
+        curl -X POST -d id=$id -d env_id=$env_id -d app_instance_ip=$app_instance_ip -d app_instance_id=$app_instance_id -d stack=$stack -d app_id=$app_id -d region=$region host.docker.internal:3000/app_infra
        '''
     }
     stage("Push state to storage") {
         sh '''
             app_id=${PROJECT_NAME}-${ENV}
             cd ./ct_node_mongo/infrastructure
-            curl -X POST -d id=$app_id -d status=running docker.for.mac.localhost:3000/status/app
+            curl -X POST -d id=$app_id -d status=running host.docker.internal:3000/status/app
             export AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY}
             export AWS_SECRET_ACCESS_KEY=${AWS_SECRET_KEY}
             aws s3 cp terraform.tfstate s3://app-state-${STACK}-${PROJECT_NAME}/state/terraform.tfstate --region ${REGION}
