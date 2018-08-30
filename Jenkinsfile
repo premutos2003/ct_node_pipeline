@@ -72,9 +72,10 @@ cd ..
         echo Planning cloud infrastructre
         str=$(curl -v -sS 'host.docker.internal:3000/infra?id=$ENV-$REGION' | jq -r '.[0]')
         kms=$(echo $str | jq -r '.kms')
+        region=$(echo $str | jq -r '.region')
         cd ./ct_node_mongo/key
         terraform init
-        terraform apply --auto-approve -var stack=${STACK} -var kms_key_arn=${kms} -var aws_access_key=${AWS_ACCESS_KEY} -var aws_secret_key=${AWS_SECRET_KEY} -var git_project=${PROJECT_NAME} -var port=${APP_PORT} -var environment=${ENV} -var version=${VERSION} -var region=${REGION}
+        terraform apply --auto-approve -var stack=${STACK} -var kms_key_arn=${kms} -var aws_access_key=${AWS_ACCESS_KEY} -var aws_secret_key=${AWS_SECRET_KEY} -var git_project=${PROJECT_NAME} -var port=${APP_PORT} -var environment=${ENV} -var version=${VERSION} -var region=$region
         '''
         }
         catch(err){
@@ -86,13 +87,14 @@ cd ..
         str=$(curl -v -sS 'host.docker.internal:3000/infra?id=$ENV-$REGION' | jq -r '.[0]')
 
         kms=$(echo $str | jq -r '.kms')
+        region=$(echo $str | jq -r '.region')
         sg_id=$(echo $str | jq -r  '.sg_id')
         subnet_id=$(echo $str |jq -r '.subnet_id')
 
         cd ./ct_node_mongo/infrastructure
         ls
         terraform init
-        terraform apply -auto-approve -var sec_gp_id=${sg_id} -var kms_key_arn=${kms} -var subnet_id=${subnet_id} -var stack=${STACK} -var aws_access_key=${AWS_ACCESS_KEY} -var aws_secret_key=${AWS_SECRET_KEY} -var environment=${ENV} -var git_project=${PROJECT_NAME} -var port=${APP_PORT} -var version=${VERSION} -var region=${REGION} .
+        terraform apply -auto-approve -var sec_gp_id=${sg_id} -var kms_key_arn=${kms} -var subnet_id=${subnet_id} -var stack=${STACK} -var aws_access_key=${AWS_ACCESS_KEY} -var aws_secret_key=${AWS_SECRET_KEY} -var environment=${ENV} -var git_project=${PROJECT_NAME} -var port=${APP_PORT} -var version=${VERSION} -var region=$region .
 
         app_instance_ip=$(terraform output -json  | jq -r  '.app_instance_ip.value')
         app_instance_id=$(terraform output -json  | jq -r  '.app_instance_id.value')
