@@ -76,6 +76,7 @@ cd ..
         cd ./ct_node_mongo/key
         terraform init
         terraform apply --auto-approve -var stack=${STACK} -var kms_key_arn=${kms} -var aws_access_key=${AWS_ACCESS_KEY} -var aws_secret_key=${AWS_SECRET_KEY} -var git_project=${PROJECT_NAME} -var port=${APP_PORT} -var environment=${ENV} -var version=${VERSION} -var region=$region
+        ls
         '''
         }
         catch(err){
@@ -85,6 +86,7 @@ cd ..
     stage("Build cloud infrastructre") {
         sh '''
         amis=[]
+        ls
         str=$(curl -v -sS 'host.docker.internal:3000/envs/'${ENV} | jq -r '.[0]')
         kms=$(echo $str | jq -r '.kms')
         region=$(echo $str | jq -r '.region')
