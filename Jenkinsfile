@@ -70,7 +70,7 @@ cd ..
         export AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY}
         export AWS_SECRET_ACCESS_KEY=${AWS_SECRET_KEY}
         echo Planning cloud infrastructre
-        str=$(curl -v -sS 'host.docker.internal:3000/envs/$ENV-$REGION' | jq -r '.[0]')
+        str=$(curl -v -sS 'host.docker.internal:3000/envs/${ENV} | jq -r '.[0]')
         kms=$(echo $str | jq -r '.kms')
         region=$(echo $str | jq -r '.region')
         cd ./ct_node_mongo/key
