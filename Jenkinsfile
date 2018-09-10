@@ -77,6 +77,8 @@ cd ..
         terraform init
         terraform apply --auto-approve -var stack=${STACK} -var kms_key_arn=${kms} -var aws_access_key=${AWS_ACCESS_KEY} -var aws_secret_key=${AWS_SECRET_KEY} -var git_project=${PROJECT_NAME} -var port=${APP_PORT} -var environment=${ENV} -var version=${VERSION} -var region=$region
         ls
+        chmod 644 base_${STACK}_${PROJECT_NAME}_${ENV}_id-rsa
+        chmod 644 base_${STACK}_${PROJECT_NAME}_${ENV}_id-rsa.pub
         '''
         }
         catch(err){
